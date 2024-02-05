@@ -31,31 +31,31 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <!-- <a href="https://github.com/MRSessions/pocketbase-vue-starter">
+  <!-- <a href="https://github.com/MRSessions/simple-pocket-crm">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a> -->
 
   <!-- <h1 align="center"><s>PocketBase Vue Starter</s></h1> -->
-  <h1 align="center">PocketBase Vue Template</h1>
+  <h1 align="center">Simple Pocket CRM</h1>
 
   <p align="center">
-    A starter template for using Vue/Vuetify with Pocketbase as a backend.
+    A simple lightweight CRM built with Pocketbase and Vue
     <!-- <br /> -->
-    <!-- <a href="https://github.com/MRSessions/pocketbase-vue-starter"><strong>Explore the docs »</strong></a> -->
+    <!-- <a href="https://github.com/MRSessions/simple-pocket-crm"><strong>Explore the docs »</strong></a> -->
     <br />
     <br />
-    <!-- <a href="https://github.com/MRSessions/pocketbase-vue-starter">View Demo</a>
+    <!-- <a href="https://github.com/MRSessions/simple-pocket-crm">View Demo</a>
     · -->
-    <a href="https://github.com/MRSessions/pocketbase-vue-starter/issues">Report Bug</a>
+    <a href="https://github.com/MRSessions/simple-pocket-crm/issues">Report Bug</a>
     ·
-    <a href="https://github.com/MRSessions/pocketbase-vue-starter/issues">Request Feature</a>
+    <a href="https://github.com/MRSessions/simple-pocket-crm/issues">Request Feature</a>
   </p>
 </div>
 
 
 
 <!-- TABLE OF CONTENTS -->
-<details>
+<!-- <details>
   <summary>Table of Contents</summary>
   <ol>
     <li>
@@ -83,38 +83,29 @@
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
-</details>
+</details> -->
 
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+<!-- ## About The Project -->
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-I started working with PocketBase and Vue/Vuetify on a couple of side projects and found that I was referencing one when creating a new project from scratch. After that, I decided that I wanted to try and create a starter template for anyone to be able to use.
-
-Here's why:
-* Your time should be focused on the core of your application, not having to create everything from scratch.
-* Comes out of the box with a Vue Admin Setup page (but is still customizable through the `pocketbase.go` file)
-* Comes with a default layout to get you up and started quickly
-
-Of course, no one template will serve all projects since your needs may be different. I'll be adding more customizability in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
-
 <!-- Thanks to all the people who have contributed to expanding this template! -->
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 
 
-### Built With
+<!-- ### Built With
 
 * [![Docker][docker-shield]][docker-url]
 * [![PocketBase][PocketBase.io]][Pocketbase-url]
 * [![Vue][Vue.js]][Vue-url]
 * [![Vuetify][Vuetify.js]][Vuetify-url]
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 
 
@@ -133,12 +124,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/MRSessions/pocketbase-vue-starter.git
+   git clone https://github.com/MRSessions/simple-pocket-crm.git
     ```
-
-#### Docker Dev Environments
-
-> Coming soon!
 
 #### Local (Non-Docker)
 
@@ -173,135 +160,30 @@ These instructions will get you a copy of the project up and running on your loc
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+<!-- ## Usage
 
 ### PocketBase
 
 #### Defaults
 
-I have setup PocketBase to remove(rewrite) the PocketBase default routes. By default, it is allowed. If you want to disable PocketBase routes, you can set the environment variable `POCKETBASE_DISABLE_UI` to `true`. This will keep users from accessing the PocketBase UI. Find details in below code sections.
+### Vue -->
 
-<details>
-  <summary>pocketbase.go</summary>
-
-  ```go
-  func main() {
-    app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
-      if getenvBool("POCKETBASE_DISABLE_UI") {
-        e.Router.Pre(middleware.Rewrite(map[string]string{
-          "/_":  "/",
-          "/_*": "/",
-        }))
-        log.Default().Println("PocketBase UI is disabled")
-      }
-      e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS(publicDir), indexFallback))
-      return nil
-    })
-  }
-
-  func getenvBool(key string) bool {
-    val := os.Getenv(key)
-    ret, err := strconv.ParseBool(val)
-    if err != nil {
-      return false
-    }
-    return ret
-  }
-  ```
-
-</details>
-
-<details>
-  <summary>docker-compose.yml</summary>
-
-  ```yml
-  version: "3"
-
-  pocketbase-vue-starter:
-    image: ghcr.io/mrsessions/pocketbase-vue-starter:latest
-    container_name: pocketbase-vue-starter
-    restart: unless-stopped
-    environment:
-      - POCKETBASE_DISABLE_UI=true # Set to true to disable the PocketBase UI
-      - POCKETBASE_ADMIN_EMAIL=admin@example.com #This is the default if you don't set it or this value is removed
-      - POCKETBASE_ADMIN_PASSWORD=1234567890 #This is the default if you don't set it or this value is removed
-    volumes:
-      - ./pocketbase-db:/app/pb_data
-    ports:
-      - 8090:80
-
-  volumes:
-    pocketbase-db:
-  ```
-</details>
-
-<details>
-  <summary>Dockerfile (Build Final Image Section)</summary>
-
-  ```dockerfile
-  # build final image
-  FROM golang:1.21.6-alpine3.19 AS final
-
-  WORKDIR /app
-
-  COPY --from=builder /app/pocketbase ./
-
-  COPY --from=node-builder /app/dist ./dist
-
-  # Set to true to disable the PocketBase UI if not using Docker Compose
-  ENV POCKETBASE_DISABLE_UI=false
-
-  EXPOSE 8090
-
-  CMD ["/app/pocketbase", "serve", "--http=0.0.0.0:80"]
-  ```
-
-</details>
-
-#### Migrations
-
-- PocketBase has a built-in migration system. You can create a migration file by running the following command:
-    ```sh
-    go run . migration create <migration-name>
-    ```
-
-- PocketBase will automatically migrate the database when the server starts. You can also run the migrations manually by running the following command:
-    ```sh
-    go run . migration up
-    ```
-
-- You can also rollback the migrations by running the following command:
-    ```sh
-    go run . migration down
-    ```
-
-- After creating migrations or updating the schema with PocketBase, if you want to generate typescript definitions, you can use the [pocketbase-typegen](https://github.com/patmood/pocketbase-typegen) commands:
-    ```sh
-    npx pocketbase-typegen --db .pocket-base/pb_data/data.db
-    ```
-> *Note: This will generate a typescript file in the rot directory called `pocketbase-types.ts`. This file will be used to generate the typescript definitions for the PocketBase schema to use in your code.*
-
-### Vue
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
+<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 <!-- ROADMAP -->
-## Roadmap
+<!-- ## Roadmap -->
 
-
-- [x] Add section on migrations.
+<!-- - [x] Add section on migrations.
 - [x] Add default layout
 - [x] Create initialize PB page in Vue to create first PocketBase Admin
 - [x] Clean up README.md
   - [x] [Add Pocketbase Typegen](https://github.com/patmood/pocketbase-typegen) (Generate typescript definitions from your pocketbase.io schema.) documentation
 - [ ] Create a Docker Dev Environment
-- [ ] Add a section for a quick how to use the PocketBase API in Vue (Refer to the [PocketBase API Docs](https://pocketbase.io/docs/api))
+- [ ] Add a section for a quick how to use the PocketBase API in Vue (Refer to the [PocketBase API Docs](https://pocketbase.io/docs/api)) -->
 
-See the [open issues](https://github.com/MRSessions/pocketbase-vue-starter/issues) for a full list of proposed features (and known issues).
+<!-- See the [open issues](https://github.com/MRSessions/simple-pocket-crm/issues) for a full list of proposed features (and known issues). -->
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 
 
@@ -336,9 +218,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Matt Sessions - [@MRSessions](https://github.com/MRSessions) - pbvuestarter@sessionstech.com
+Matt Sessions - [@MRSessions](https://github.com/MRSessions)
 
-Project Link: [https://github.com/MRSessions/pocketbase-vue-starter](https://github.com/MRSessions/pocketbase-vue-starter)
+Project Link: [https://github.com/MRSessions/simple-pocket-crm](https://github.com/MRSessions/simple-pocket-crm)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -365,22 +247,22 @@ Use this space to list resources you find helpful and would like to give credit 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[project-url]: https://github.com/MRSessions/pocketbase-vue-starter
+[project-url]: https://github.com/MRSessions/simple-pocket-crm
 [status-shield]: https://img.shields.io/badge/status-active-success.svg?style=for-the-badge
-[forks-shield]: https://img.shields.io/github/forks/MRSessions/pocketbase-vue-starter.svg?style=for-the-badge
-[forks-url]: https://github.com/MRSessions/pocketbase-vue-starter/network/members
-[stars-shield]: https://img.shields.io/github/stars/MRSessions/pocketbase-vue-starter.svg?style=for-the-badge
-[stars-url]: https://github.com/MRSessions/pocketbase-vue-starter/stargazers
-[issues-shield]: https://img.shields.io/github/issues/MRSessions/pocketbase-vue-starter.svg?style=for-the-badge
-[issues-url]: https://github.com/MRSessions/pocketbase-vue-starter/issues
-[license-shield]: https://img.shields.io/github/license/MRSessions/pocketbase-vue-starter.svg?style=for-the-badge
-[license-url]: https://github.com/MRSessions/pocketbase-vue-starter/blob/master/LICENSE
-[build-shield]: https://img.shields.io/github/actions/workflow/status/MRsessions/pocketbase-vue-starter/build-single-docker-image.yml?style=for-the-badge
-[build-url]: https://github.com/MRSessions/pocketbase-vue-starter/actions
-[prerelease-shield]: https://img.shields.io/github/v/release/MRSessions/pocketbase-vue-starter?color=s&include_prereleases&label=Pre-release&logo=s&logoColor=s&style=for-the-badge
-[release-date-shield]: https://img.shields.io/github/release-date-pre/mrsessions/pocketbase-vue-starter?label=Released&style=for-the-badge
-[docker-release-shield]: https://img.shields.io/github/v/tag/mrsessions/pocketbase-vue-starter?include_prereleases&label=docker&style=for-the-badge
-[release-url]: https://github.com/MRSessions/pocketbase-vue-starter/pkgs/container/pocketbase-vue-starter
+[forks-shield]: https://img.shields.io/github/forks/MRSessions/simple-pocket-crm.svg?style=for-the-badge
+[forks-url]: https://github.com/MRSessions/simple-pocket-crm/network/members
+[stars-shield]: https://img.shields.io/github/stars/MRSessions/simple-pocket-crm.svg?style=for-the-badge
+[stars-url]: https://github.com/MRSessions/simple-pocket-crm/stargazers
+[issues-shield]: https://img.shields.io/github/issues/MRSessions/simple-pocket-crm.svg?style=for-the-badge
+[issues-url]: https://github.com/MRSessions/simple-pocket-crm/issues
+[license-shield]: https://img.shields.io/github/license/MRSessions/simple-pocket-crm.svg?style=for-the-badge
+[license-url]: https://github.com/MRSessions/simple-pocket-crm/blob/master/LICENSE
+[build-shield]: https://img.shields.io/github/actions/workflow/status/MRsessions/simple-pocket-crm/build-single-docker-image.yml?style=for-the-badge
+[build-url]: https://github.com/MRSessions/simple-pocket-crm/actions
+[prerelease-shield]: https://img.shields.io/github/v/release/MRSessions/simple-pocket-crm?color=s&include_prereleases&label=Pre-release&logo=s&logoColor=s&style=for-the-badge
+[release-date-shield]: https://img.shields.io/github/release-date-pre/mrsessions/simple-pocket-crm?label=Released&style=for-the-badge
+[docker-release-shield]: https://img.shields.io/github/v/tag/mrsessions/simple-pocket-crm?include_prereleases&label=docker&style=for-the-badge
+[release-url]: https://github.com/MRSessions/simple-pocket-crm/pkgs/container/simple-pocket-crm
 
 
 [Vue.js]: https://img.shields.io/badge/Vue.js-3.2.38+-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D

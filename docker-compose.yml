@@ -1,11 +1,11 @@
 version: "3"
 
 services:
-  pocketbase-vue-starter:
-    image: ghcr.io/mrsessions/pocketbase-vue-starter:latest
+  simple-pocket-crm:
+    # image: ghcr.io/mrsessions/simple-pocket-crm:latest
     build:
       context: ./
-    container_name: pocketbase-vue-starter
+    container_name: simple-pocket-crm
     environment:
       - POCKETBASE_DISABLE_UI=false # Set to true to disable the PocketBase UI
       - POCKETBASE_ADMIN_EMAIL=admin@example.com #This is the default if you don't set it or this value is removed
